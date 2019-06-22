@@ -17,7 +17,7 @@
     制等。此示例还实现了一个简单的基于申明式安全的防CSRF攻击的Filter。
 
     接下来简单介绍一下实现细节，其主要思想是将验证和权限检查分开。验证由我们自己在响应login POST请
-    求的Servlet中调用req.login()函数发起，而权限检查则完全交由Tomcat容器,然后根据web应用描述符的
+    求的Servlet中调用req.login()函数发起，而权限检查则完全交由Tomcat容器,容器根据web应用描述符的
     约束规则进行处理。所以首先与申明式安全一样需要在服务器配置文件中对context容器进行配置，主要针对
     resource和real元素，如果要使用单点登录、登录限制等功能需要参考Tomcat文档进行适当更改。然后是对
     web应用的部署描述符web.xml进行配置，但是这里只是声明安全角色（security-role）和安全约束规则（
@@ -40,6 +40,6 @@
     视为CSRF攻击，返回error code 403。其次我的这个Filter并没有像CsrfPreventionFilter使用的每5次请
     求（可配置）就更改token，我是一个会话一直使用同一个token。（我不知道这样会不会带来一些风险，按道
     理来说CsrfPreventionFilter也是有风险的，只不过token变换的更频繁，风险更小而已，CSRF是最难防范的
-    web攻击之一）我的Filter也同样具有一个明显的缺陷，就是必须使用resp.encodeRedirectURL()和resp.e-
-    ncodeURL()方法分别对重定向URL和出现在JSP页面的URL进行重写，而且静态页面里不能包含指向本应用的URL，
-    否则就应该改写成JSP并对URL进行重写。
+    web攻击之一）我的Filter也同样具有一个非常明显的缺陷，就是必须使用resp.encodeRedirectURL()和
+    resp.encodeURL()方法分别对重定向URL和出现在JSP页面的URL进行重写，而且静态页面里不能包含指向本应
+    用的URL，否则就应该改写成JSP并对URL进行重写。
