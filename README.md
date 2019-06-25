@@ -35,11 +35,12 @@
 
     最后顺便介绍一下防CSRF的Filter。这个Filter的基本思想是使用URL重写为URL添加token来防止CSRF，具体
     实现参照了Tomcat自带的org.apache.catalina.filters.CsrfPreventionFilter。不过与CsrfPreventi-
-    onFilter不同的是不需要配置保护的页面地址，而是简单地认为，所有需要用户登录的页面需要CSRF保护，不
-    需要登录的页面不需要防CSRF保护，而且只要登录以后访问任意一个属于此应用的URL都需要携带token，否则
-    视为CSRF攻击，返回error code 403。其次这个Filter并没有像CsrfPreventionFilter使用的每5次请
-    求（可配置）就更改token，它是一个会话一直使用同一个token。（我不知道这样会不会带来一些风险，按道
-    理来说CsrfPreventionFilter也是有风险的，只不过token变换的更频繁，风险更小而已，CSRF是最难防范的
-    web攻击之一）我的Filter也同样具有一个非常明显的缺陷，就是必须使用resp.encodeRedirectURL()和
-    resp.encodeURL()方法分别对重定向URL和出现在JSP页面的URL进行重写，而且静态页面里不能包含指向本应
-    用的URL，否则就应该改写成JSP并对URL进行重写。
+    onFilter不同的是不必需配置特定的被保护的页面地址，而是简单地包括所有页面，并且认为需要用户登录的
+    页面需要CSRF保护，不需要登录的页面不需要防CSRF保护，而且只要登录以后访问任意一个属于此应用的URL
+    都需要携带token，否则视为CSRF攻击，返回error code 403。其次这个Filter并没有像CsrfPreventionFilter
+    使用的每5次请求（可配置）就更改token，它是一个会话一直使用同一个token。（我不知道这样会不会带来一
+    些风险，按道理来说CsrfPreventionFilter也是有风险的，只不过token变换的更频繁，风险更小而已，CSRF
+    是最难防范的web攻击之一）这个Filter也同样具有一个非常明显的缺陷，就是必须使用resp.encodeRedirectURL()
+    和resp.encodeURL()方法分别对重定向URL和出现在JSP页面的URL进行重写，而且静态页面里不能包含指向本应
+    用的URL，否则就应该改写成JSP并对URL进行重写。当然你也可以对需要保护的页面进行配置，这样可以排除一些
+    静态资源。
