@@ -15,11 +15,11 @@
     时，会使用NonLoginAuthenticator。在用户验证阶段NonLoginAuthenticator总是通过并返回true，无论
     发起该请求的用户是否真正通过用户名和密码验证。然后在权限检查时，未验证的用户请求和已验证但权限不
     对的请求都会被拦截，然后调用sendError()设置HTTP响应状态码403（Forbidden）结束处理过程，开始返
-    回。在返回过程中Tomcat会ErrorReportValve对未处理的错误响应状态进行处理，进入错误处理流程（req.getDispatcherType() == DispatcherType.ERROR）。接下来
-    Tomcat会根据web应用部署描述符的error-page元素配置，转发请求到响应到403的error page。在此error
-    page中我们需要区分未验证和已验证但权限不对的两种情况，并且只返回后一种情况的内容。而把未验证的请求
-    更改响应状态码并转发到401的error page，此时一定不能再简单地使用sendError(401)来处理响应,因为
-    Tomcat已经不会再处理sendError(),所以只能自己立即返回401的内容或使用我这里采用的转发方式。
+    回。在返回过程中StandardHost容器管道中的ErrorReportValve会对未处理的错误响应状态进行处理，处理
+    流程就是forward请求到响应到403的error page。在此error page中我们需要区分未验证和已验证但权限不
+    对的两种情况，并且只返回后一种情况的内容。而把未验证的请求更改响应状态码并转发到401的error page，
+    此时一定不能再简单地使用sendError(401)来处理响应,因为Tomcat已经不会再处理sendError(),所以只能
+    自己立即返回401的内容或使用我这里采用的转发方式。
 
     最后顺便介绍一下防CSRF的Filter。这个Filter的基本思想是使用URL重写为URL添加token来防止CSRF，具体
     实现参照了Tomcat自带的org.apache.catalina.filters.CsrfPreventionFilter。不过与CsrfPreventi-
