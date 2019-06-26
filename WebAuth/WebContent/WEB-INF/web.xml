@@ -84,7 +84,7 @@
 		<filter-name>CSRFRewriteFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
-		<!-- ERROR dispatch is original ServletRequest and ServletResponse! -->
+		<!-- The dispatch type of ERROR use original ServletRequest and ServletResponse! -->
 		<dispatcher>ERROR</dispatcher>
 	</filter-mapping>
 	<error-page>
