@@ -21,14 +21,14 @@
     此时一定不能再简单地使用sendError(401)来处理响应,因为Tomcat已经不会再处理sendError(),所以只能
     自己立即返回401的内容或使用我这里采用的转发方式。
 
-    最后顺便介绍一下防CSRF的Filter。这个Filter的基本思想是使用URL重写为URL添加token来防止CSRF，具体
-    实现参照了Tomcat自带的org.apache.catalina.filters.CsrfPreventionFilter。不过与CsrfPreventi-
-    onFilter不同的是不必需配置特定的被保护的页面地址，而是简单地包括所有页面，并且认为需要用户登录的
-    页面需要CSRF保护，不需要登录的页面不需要防CSRF保护，而且只要登录以后访问任意一个属于此应用的URL
-    都需要携带token，否则视为CSRF攻击，返回error code 403。其次这个Filter并没有像CsrfPreventionFilter
-    使用的每5次请求（可配置）就更改token，它是一个会话一直使用同一个token。（我不知道这样会不会带来一
-    些风险，按道理来说CsrfPreventionFilter也是有风险的，只不过token变换的更频繁，风险更小而已，CSRF
-    是最难防范的web攻击之一）这个Filter也同样具有一个非常明显的缺陷，就是必须使用resp.encodeRedirectURL()
-    和resp.encodeURL()方法分别对重定向URL和出现在JSP页面的URL进行重写，而且静态页面里不能包含指向本应
-    用的URL，否则就应该改写成JSP并对URL进行重写。当然你也可以对需要保护的页面进行配置，这样可以排除一些
-    静态资源。
+    最后顺便介绍一下防CSRF的Filter。这个Filter的基本思想是使用URL重写为URL添加token来防止CSRF，具
+    体实现参照了Tomcat自带的org.apache.catalina.filters.CsrfPreventionFilter。不过与CsrfPreve-
+    ntionFilter不同的是不必需配置特定的被保护的页面地址，而是简单地包括所有页面，并且认为需要用户登
+    录的页面需要CSRF保护，不需要登录的页面不需要防CSRF保护，而且只要登录以后访问任意一个属于此应用的
+    URL都需要携带token，否则视为CSRF攻击，返回403。其次这个Filter并没有像CsrfPreventionFilter使用
+    的每5次请求（可配置）就更改token，它是一个会话一直使用同一个token。（我不知道这样会不会带来一些
+    风险，按道理来说CsrfPreventionFilter也是有风险的，只不过token变换的更频繁，风险更小而已，CSRF
+    是最难防范的web攻击之一）这个Filter也同样具有一个非常明显的缺陷，就是必须使用encodeRedirectURL()
+    和encodeURL()方法分别对重定向URL和出现在JSP页面的URL进行重写，而且静态页面里不能包含指向本应用的
+    URL，否则就应该改写成JSP并对URL进行重写。当然你也可以对需要保护的页面进行配置，这样可以排除一些静
+    态资源。
