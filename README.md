@@ -10,9 +10,9 @@
     求的Servlet中调用req.login()函数发起，而权限检查则完全交由Tomcat容器根据web应用描述符的约束规
     则进行处理。首先需要对本应用对应的context容器针对resource和real元素进行配置，如果要使用单点登
     录、登录限制等功能需要参考Tomcat文档对本程序的context.xml配置文件进行适当更改。然后是对部署描
-    述符web.xml进行配置，但只用声明安全角色（security-role）和安全约束规则（security-constraint），
+    述符web.xml进行配置，但是只声明安全角色（security-role）和安全约束规则（security-constraint），
     完全不用配置验证方式元素（login-config）。因为没有login-config元素，所以Tomcat会在加载web应用
-    时，会使用NonLoginAuthenticator。在用户验证阶段NonLoginAuthenticator总是通过并返回true，无论
+    时，使用NonLoginAuthenticator。在用户验证阶段NonLoginAuthenticator总是通过并返回true，无论
     发起该请求的用户是否真正通过用户名和密码验证。然后在权限检查时，未验证的用户请求和已验证但权限不
     对的请求都会被拦截，然后调用sendError()设置HTTP响应状态码403（Forbidden）结束处理过程，开始返
     回。在返回过程中StandardHost容器管道中的ErrorReportValve会对未处理的错误响应状态进行处理，处理
