@@ -139,76 +139,49 @@ public class CSRFRewriteFilter extends HttpFilter {
 			return encodeRedirectURL(url);
 		}
 
-		private String generateNonce() {
-			byte random[] = new byte[16];
-
-			// Render the result as a String of hexadecimal digits
-			StringBuilder buffer = new StringBuilder();
-
-			SecureRandom randomSource = new SecureRandom();
-			randomSource.nextBytes(random);
-
-			for (int j = 0; j < random.length; j++) {
-				byte b1 = (byte) ((random[j] & 0xf0) >> 4);
-				byte b2 = (byte) (random[j] & 0x0f);
-				if (b1 < 10) {
-					buffer.append((char) ('0' + b1));
-				} else {
-					buffer.append((char) ('A' + (b1 - 10)));
-				}
-				if (b2 < 10) {
-					buffer.append((char) ('0' + b2));
-				} else {
-					buffer.append((char) ('A' + (b2 - 10)));
-				}
-			}
-
-			return buffer.toString();
-		}
-
 		private String addNonce(String url, String nonce) {
 
-	        if ((url == null) || (nonce == null)) {
-	            return url;
-	        }
+			if ((url == null) || (nonce == null)) {
+				return url;
+			}
 
-	        String path = url;
-	        String query = "";
-	        String anchor = "";
-	        int pound = path.indexOf('#');
-	        if (pound >= 0) {
-	            anchor = path.substring(pound);
-	            path = path.substring(0, pound);
-	        }
-	        int question = path.indexOf('?');
-	        if (question >= 0) {
-	            query = path.substring(question + 1);
-	            path = path.substring(0, question);
-	        }
-            int i = 0;
-            String segment = "";
-	        StringBuilder sb = new StringBuilder(path);
-            sb.append('?');
-            while (i < query.length()) {
-            	int and = query.indexOf('&', i);
-            	if (and >= 0) {
-            		segment = query.substring(i, and);
-            		i = and + 1;
-            	} else {
-            		segment = query.substring(i);
-            		i = query.length();
-            	}
-            	if (!segment.equals(tokenName) && !segment.startsWith(tokenName + "=")) {
-            		sb.append(segment);
-            		sb.append("&");
-            	}
-            }
-	        sb.append(tokenName);
-	        sb.append('=');
-	        sb.append(nonce);
-	        sb.append(anchor);
-	        return sb.toString();
-	    }
+			String path = url;
+			String query = "";
+			String anchor = "";
+			int pound = path.indexOf('#');
+			if (pound >= 0) {
+				anchor = path.substring(pound);
+				path = path.substring(0, pound);
+			}
+			int question = path.indexOf('?');
+			if (question >= 0) {
+				query = path.substring(question + 1);
+				path = path.substring(0, question);
+			}
+			int i = 0;
+			String segment = "";
+			StringBuilder sb = new StringBuilder(path);
+			sb.append('?');
+			while (i < query.length()) {
+				int and = query.indexOf('&', i);
+				if (and >= 0) {
+					segment = query.substring(i, and);
+					i = and + 1;
+				} else {
+					segment = query.substring(i);
+					i = query.length();
+				}
+				if (!segment.equals(tokenName) && !segment.startsWith(tokenName + "=")) {
+					sb.append(segment);
+					sb.append("&");
+				}
+			}
+			sb.append(tokenName);
+			sb.append('=');
+			sb.append(nonce);
+			sb.append(anchor);
+			return sb.toString();
+		}
 	}
 
 }
