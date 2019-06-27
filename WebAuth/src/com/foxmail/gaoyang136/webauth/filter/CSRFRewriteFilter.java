@@ -182,16 +182,27 @@ public class CSRFRewriteFilter extends HttpFilter {
 	        }
 	        int question = path.indexOf('?');
 	        if (question >= 0) {
-	            query = path.substring(question);
+	            query = path.substring(question + 1);
 	            path = path.substring(0, question);
 	        }
+            int i = 0;
+            String segment = "";
 	        StringBuilder sb = new StringBuilder(path);
-	        if (query.length() >0) {
-	            sb.append(query);
-	            sb.append('&');
-	        } else {
-	            sb.append('?');
-	        }
+            sb.append('?');
+            while (i < query.length()) {
+            	int and = query.indexOf('&', i);
+            	if (and >= 0) {
+            		segment = query.substring(i, and);
+            		i = and + 1;
+            	} else {
+            		segment = query.substring(i);
+            		i = query.length();
+            	}
+            	if (!segment.equals(tokenName) && !segment.startsWith(tokenName + "=")) {
+            		sb.append(segment);
+            		sb.append("&");
+            	}
+            }
 	        sb.append(tokenName);
 	        sb.append('=');
 	        sb.append(nonce);
