@@ -89,10 +89,8 @@ public class LoginServlet extends HttpServlet {
 			return;
 		}
 
-		String fromURL = (String) session.getAttribute("fromURL");
-		if (fromURL != null) {
-			session.removeAttribute("fromURL");
-		}
+		
+		resp.sendRedirect(resp.encodeRedirectURL(req.getContextPath() + "/"));
 
 		System.out.printf("User Principal:%s\n"
 				+ "Auth Type:%s\n"
@@ -106,11 +104,5 @@ public class LoginServlet extends HttpServlet {
 				+ "-------------------\n",
 				req.getUserPrincipal().getName(), req.getAuthType(), req.getRemoteUser(), req.isUserInRole("sys_admin"),
 				req.isUserInRole("audit"), req.isUserInRole("user_admin"), req.isUserInRole("web_user"), req.isUserInRole("ff"), fromURL);
-
-		if (fromURL == null || fromURL.trim().isEmpty()) {
-			resp.sendRedirect(resp.encodeRedirectURL(req.getContextPath() + "/"));
-		} else {
-			resp.sendRedirect(resp.encodeRedirectURL(fromURL));
-		}
 	}
 }
