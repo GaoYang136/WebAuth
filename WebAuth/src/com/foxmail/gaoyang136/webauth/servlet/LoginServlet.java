@@ -100,9 +100,8 @@ public class LoginServlet extends HttpServlet {
 				+ "Is user_admin:%b\n"
 				+ "Is web_user:%b\n"
 				+ "Is ff:%b\n"
-				+ "From URL:%s\n"
 				+ "-------------------\n",
 				req.getUserPrincipal().getName(), req.getAuthType(), req.getRemoteUser(), req.isUserInRole("sys_admin"),
-				req.isUserInRole("audit"), req.isUserInRole("user_admin"), req.isUserInRole("web_user"), req.isUserInRole("ff"), fromURL);
+				req.isUserInRole("audit"), req.isUserInRole("user_admin"), req.isUserInRole("web_user"), req.isUserInRole("ff"));
 	}
 }
